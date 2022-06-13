@@ -62,6 +62,13 @@ return [
             'visibility' => 'public',
             'url' => env('APP_URL').'/uploads',
         ],
+
+        'cover' => [
+            'driver' => 'local',
+            'root' => public_path('covers'),
+            'visibility' => 'public',
+            'url' => env('APP_URL').'/covers',
+        ],
     ],
 
     /*

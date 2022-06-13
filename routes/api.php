@@ -1,6 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\GoodsAttributesController;
+use App\Http\Controllers\Api\GoodsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::get('goods', [GoodsController::class, 'index'])->name('goods');
+Route::get('goods/{goods}', [GoodsController::class, 'show'])->name('goods.show');
+
+Route::get('goods-attributes', [GoodsAttributesController::class, 'index'])->name('goods-attributes');

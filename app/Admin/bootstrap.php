@@ -18,4 +18,32 @@
  *
  */
 
+use App\Admin\Extensions\BelongsToMany;
+use Encore\Admin\Grid;
+use \Encore\Admin\Form;
+
 Encore\Admin\Form::forget(['map', 'editor']);
+
+app('view')->prependNamespace('admin', resource_path('views/admin'));
+
+Grid::init(function (Grid $grid) {
+
+    $grid->filter(function($filter){
+        $filter->disableIdFilter();
+    });
+
+    $grid->actions(function (Grid\Displayers\Actions $actions) {
+        $actions->disableView();
+    });
+});
+
+Form::init(function (Form $form) {
+
+    $form->disableViewCheck();
+
+    $form->tools(function (Form\Tools $tools) {
+        $tools->disableView();
+    });
+});
+
+Form::extend('belongsToMany', BelongsToMany::class);

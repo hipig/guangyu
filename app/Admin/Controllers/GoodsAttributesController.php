@@ -56,6 +56,7 @@ class GoodsAttributesController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new GoodsAttribute());
+        $grid->model()->latest();
         $grid->column('type', '属性类型')->using(GoodsAttribute::$typeMap);
         $grid->column('value', '属性值');
         $grid->column('rank', '排序')->editable();

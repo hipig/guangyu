@@ -55,6 +55,7 @@ class GoodsController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Goods());
+        $grid->model()->latest();
         $grid->column('no', '编号');
         $grid->column('platform_text', '平台');
         $grid->column('account_type_text', '帐号类型');

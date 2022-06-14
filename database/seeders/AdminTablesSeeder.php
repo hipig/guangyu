@@ -207,10 +207,6 @@ class AdminTablesSeeder extends Seeder
                 [
                     "name" => "超级管理员",
                     "slug" => "administrator"
-                ],
-                [
-                    "name" => "测试权限",
-                    "slug" => "test"
                 ]
             ]
         );
@@ -232,14 +228,6 @@ class AdminTablesSeeder extends Seeder
                 [
                     "role_id" => 1,
                     "permission_id" => 1
-                ],
-                [
-                    "role_id" => 2,
-                    "permission_id" => 6
-                ],
-                [
-                    "role_id" => 2,
-                    "permission_id" => 10
                 ]
             ]
         );

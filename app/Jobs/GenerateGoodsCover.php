@@ -47,8 +47,8 @@ class GenerateGoodsCover implements ShouldQueue
         // 基础信息
         $this->writeLineText($image, "基础信息", 90);
         $this->writeCountText($image, "蜡烛数量：{$this->goods->candle_count}", 15, 140);
-        $this->writeCountText($image, "爱心数量：{$this->goods->love_count}", 270, 140);
-        $this->writeCountText($image, "翼数量：{$this->goods->wing_count}", 15, 175);
+        $this->writeCountText($image, "翼数量：{$this->goods->wing_count}", 270, 140);
+        $this->writeCountText($image, "爱心数量：{$this->goods->love_count}", 15, 175);
         $this->writeCountText($image, "表演季进度：{$this->goods->progress_rate}%", 270, 175);
 
         // 主要信息
@@ -69,17 +69,17 @@ class GenerateGoodsCover implements ShouldQueue
         $startY += 30;
         $this->writeAttributeLabelText($image, "稀有礼包：", 15, $startY);
         $giftBags = $this->goods->giftBags()->pluck('value')->toArray();
-        $this->writeAttributeContentText($image, $giftBags, 115, $startY, "#fbbf24");
+        $this->writeAttributeContentText($image, $giftBags, 115, $startY, "#fef08a");
 
         // 热门物品
         $startY += 30;
         $this->writeAttributeLabelText($image, "热门物品：", 15, $startY);
         $hotItems = $this->goods->hotItems()->pluck('value')->toArray();
-        $this->writeAttributeContentText($image, $hotItems, 115, $startY, "#fbbf24");
+        $this->writeAttributeContentText($image, $hotItems, 115, $startY, "#fef08a");
 
         $startY += 30;
         $this->writeAttributeLabelText($image, "身高：", 15, $startY);
-        $this->writeAttributeContentText($image, ["{$this->goods->height_text}"], 75, $startY, "#fbbf24");
+        $this->writeAttributeContentText($image, ["{$this->goods->height_text}"], 75, $startY, "#fef08a");
 
         // 其他亮点
         if ($this->goods->description) {

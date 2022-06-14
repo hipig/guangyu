@@ -25,8 +25,8 @@ return new class extends Migration
             $table->decimal('min_price', 12)->nullable()->default(0)->comment('最低价');
             $table->decimal('fixed_price', 12)->nullable()->default(0)->comment('一口价');
             $table->unsignedTinyInteger('is_special')->default(2)->comment('是否特价：1-是 2-否');
-            $table->float('progress_rate', 4)->default(0)->comment('表演季进度比');
-            $table->unsignedTinyInteger('height')->default(0)->comment('身高');
+            $table->unsignedInteger('progress_rate')->default(0)->comment('表演季进度比');
+            $table->unsignedTinyInteger('height')->nullable()->default(0)->comment('身高');
             $table->string('description')->nullable()->comment('其他亮点');
             $table->json('screenshot_images')->nullable()->comment('账号截图');
             $table->boolean('is_generated_cover')->default(false)->comment('是否生成封面');

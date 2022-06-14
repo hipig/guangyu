@@ -8,7 +8,7 @@
       </button>
     </div>
     <div class="space-y-2">
-      <div class="bg-[#3d4667] text-gray-50 text-lg py-3 space-y-2" :style="{backgroundImage: 'url(' +mainBg+ ')'}">
+      <div class="bg-[#3d4667] text-gray-50 text-lg py-4 space-y-2" :style="{backgroundImage: 'url(' +mainBg+ ')'}">
         <div class="flex justify-between px-10 text-2xl">
           <h3>{{ goods.account_type_text }}</h3>
           <span>编号 {{ goods.no }}</span>
@@ -21,8 +21,8 @@
           </div>
           <div class="grid grid-cols-2 gap-x-3 gap-y-1 px-6">
             <span>蜡烛数量：{{ goods.candle_count }}</span>
-            <span>爱心数量：{{ goods.love_count }}</span>
             <span>翼数量：{{ goods.wing_count }}</span>
+            <span>爱心数量：{{ goods.love_count }}</span>
             <span>表演季进度：{{ goods.progress_rate }}%</span>
           </div>
         </div>
@@ -34,24 +34,24 @@
           </div>
           <div class="px-6 space-y-1">
             <div class="flex">
-              <span class="text-[#df6311]">已毕业地图：</span>
+              <span class="flex-shrink-0 text-[#df6311]">已毕业地图：</span>
               <span>{{ goods.maps_text }}</span>
             </div>
             <div class="flex">
-              <span class="text-[#df6311]">已毕业季节：</span>
+              <span class="flex-shrink-0 text-[#df6311]">已毕业季节：</span>
               <span>{{ goods.seasons_text }}</span>
             </div>
             <div class="flex">
-              <span class="text-[#df6311]">稀有红包：</span>
-              <span class="text-yellow-500">{{ goods.gift_bags_text }}</span>
+              <span class="flex-shrink-0 text-[#df6311]">稀有礼包：</span>
+              <span class="text-yellow-200">{{ goods.gift_bags_text }}</span>
             </div>
             <div>
               <span class="flex-shrink-0 text-[#df6311]">热门物品：</span>
-              <span class="text-yellow-500">{{ goods.hot_items_text }}</span>
+              <span class="text-yellow-200">{{ goods.hot_items_text }}</span>
             </div>
             <div>
               <span class="flex-grow-0 text-[#df6311]">身高：</span>
-              <span class="text-yellow-500">{{ goods.height_text }}</span>
+              <span class="text-yellow-200">{{ goods.height_text }}</span>
             </div>
           </div>
         </div>

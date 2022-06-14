@@ -7,6 +7,7 @@ use App\Admin\Selectable\GoodsHotItems;
 use App\Admin\Selectable\GoodsMaps;
 use App\Admin\Selectable\GoodsSeasons;
 use App\Models\Goods;
+use App\Models\GoodsAttribute;
 use Encore\Admin\Auth\Permission;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Facades\Admin;
@@ -55,7 +56,7 @@ class GoodsController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Goods());
-        $grid->model()->latest();
+        $grid->model()->orderBy('status')->latest();
         $grid->column('no', '编号');
         $grid->column('platform_text', '平台');
         $grid->column('account_type_text', '帐号类型');
@@ -69,12 +70,14 @@ class GoodsController extends AdminController
            return $value . '%';
         });
         $grid->column('height_text', '身高');
-        $grid->column('status', '上架状态')->using(Goods::$statusMap);
+        $grid->column('status', '上架状态')->editable('select', Goods::$statusMap);
         $grid->column('created_by', '创建人');
         $grid->column('created_at', '创建时间');
 
         $grid->filter(function($filter) {
             $filter->like('no', '编号');
+            $filter->equal('platform', '平台')->radio(Goods::$platformMap);
+            $filter->equal('account_type', '账号类型')->select(Goods::$accountTypeMap);
             $filter->equal('status', '上架状态')->radio(['' => '默认', 1 => '上架', 2 => '下架']);
         });
 
@@ -105,6 +108,7 @@ class GoodsController extends AdminController
         $form = new Form(new Goods());
 
         $form->tab('基础信息', function (Form $form) {
+            $form->text('no', '编号')->rules('required');
             $form->radio('platform', '系统')->default(Goods::PLATFORM_ANDROID)->options(Goods::$platformMap)->rules('required');
             $form->select('account_type', '账号类型')->options(Goods::$accountTypeMap)->rules('required');
 
@@ -119,23 +123,39 @@ class GoodsController extends AdminController
 
             $form->slider('progress_rate', '表演季进度')->options([
                 'max'       => 100,
-                'min'       => 1,
+                'min'       => 0,
                 'step'      => 1,
                 'postfix'   => '%'
             ]);
-            $form->select('height', '身高')->options(Goods::$heightMap)->rules('required');
+            $form->select('height', '身高')->options(Goods::$heightMap);
             $form->textarea('description', '其他亮点');
+            $form->radio('status', '上架状态')->default(Goods::STATUS_ENABLE)->options(Goods::$statusMap);
         });
 
-        $form->tab('属性管理', function (Form $form) {
-            $form->belongsToMany('maps', GoodsMaps::class, '已毕业地图');
-            $form->belongsToMany('seasons', GoodsSeasons::class, '已毕业季节');
-            $form->belongsToMany('giftBags', GoodsGiftBags::class, '稀有礼包');
-            $form->belongsToMany('hotItems', GoodsHotItems::class, '热门物品');
+        $form->tab('主要信息', function (Form $form) {
+            $maps = GoodsAttribute::query()->where('type', GoodsAttribute::TYPE_MAP)->pluck('value', 'id');
+            $seasons = GoodsAttribute::query()->where('type', GoodsAttribute::TYPE_SEASON)->pluck('value', 'id');
+            $giftBags = GoodsAttribute::query()->where('type', GoodsAttribute::TYPE_GIFT_BAG)->pluck('value', 'id');
+            $hotItems = GoodsAttribute::query()->where('type', GoodsAttribute::TYPE_ITEM)->pluck('value', 'id');
+
+            $form->checkbox('maps', '已毕业地图')->options($maps);
+            $form->checkbox('seasons', '已毕业季节')->options($seasons);
+            $form->checkbox('giftBags', '稀有礼包')->options($giftBags);
+            $form->checkbox('hotItems', '热门物品')->options($hotItems);
         });
 
         $form->tab('详情图片', function (Form $form) {
-            $form->multipleImage('screenshot_images', '截图上传');
+            $form->multipleImage('screenshot_images', '截图上传')->removable()->sortable();
+        });
+
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableView();
+            if (Admin::user()->cannot('goods')) {
+                $tools->disableList();
+            }
+            if (Admin::user()->cannot('goods.destroy')) {
+                $tools->disableDelete();
+            }
         });
 
         return $form;

@@ -56,7 +56,7 @@ class GoodsAttributesController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new GoodsAttribute());
-        $grid->model()->latest();
+        $grid->model()->orderBy('status')->latest();
         $grid->column('type', '属性类型')->using(GoodsAttribute::$typeMap);
         $grid->column('value', '属性值');
         $grid->column('rank', '排序')->editable();
@@ -99,6 +99,16 @@ class GoodsAttributesController extends AdminController
         $form->text('value', '属性值')->rules('required');
         $form->number('rank', '排序')->default(0)->help('排序值越小越靠前');
         $form->switch('status', '状态')->default(1)->states($this->states);
+
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableView();
+            if (Admin::user()->cannot('goods.attributes')) {
+                $tools->disableList();
+            }
+            if (Admin::user()->cannot('goods.attributes.destroy')) {
+                $tools->disableDelete();
+            }
+        });
 
         return $form;
     }

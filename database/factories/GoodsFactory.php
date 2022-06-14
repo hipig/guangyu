@@ -19,6 +19,7 @@ class GoodsFactory extends Factory
     public function definition()
     {
         return [
+            'no' => Goods::findAvailableNo(),
             'platform' => $this->faker->randomElement(array_keys(Goods::$platformMap)),
             'account_type' => $this->faker->randomElement(array_keys(Goods::$accountTypeMap)),
             'candle_count' => $this->faker->randomNumber(3),
@@ -29,6 +30,7 @@ class GoodsFactory extends Factory
             'fixed_price' => $this->faker->randomFloat(5000),
             'progress_rate' => $this->faker->randomNumber(2),
             'height' => $this->faker->randomElement(array_keys(Goods::$heightMap)),
+            'created_by' => '超级管理员'
         ];
     }
 

@@ -55,7 +55,9 @@ class GoodsController extends AdminController
     {
         $grid = new Grid(new Goods());
         $grid->model()->orderBy('status')->latest();
-        $grid->column('no', '编号');
+        $grid->column('no', '编号')->display(function ($no) {
+            return "<a href='/store/detail?id={$this->id}' target='_blank'>{$no}</a>";
+        });
         $grid->column('platform_text', '平台');
         $grid->column('account_type_text', '帐号类型');
         $grid->column('candle_count', '蜡烛数量');

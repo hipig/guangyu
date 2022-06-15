@@ -8,12 +8,12 @@
       </button>
     </div>
     <div class="space-y-2">
-      <div class="bg-[#3d4667] text-gray-50 text-lg py-4 space-y-2" :style="{backgroundImage: 'url(' +mainBg+ ')'}">
+      <div class="bg-[#3d4667] text-gray-50 text-lg py-6 space-y-4" :style="{backgroundImage: 'url(' +mainBg+ ')'}">
         <div class="flex justify-between px-10 text-2xl">
           <h3>{{ goods.account_type_text }}</h3>
           <span>编号 {{ goods.no }}</span>
         </div>
-        <div class="space-y-2">
+        <div class="space-y-4">
           <div class="flex items-center">
             <div class="grow h-px bg-yellow-400"></div>
             <div class="px-6 text-center text-yellow-400">基础信息</div>
@@ -26,22 +26,22 @@
             <span>表演季进度：{{ goods.progress_rate }}%</span>
           </div>
         </div>
-        <div class="space-y-2">
+        <div class="space-y-4">
           <div class="flex items-center">
             <div class="grow h-px bg-yellow-400"></div>
             <div class="px-6 text-center text-yellow-400">主要信息</div>
             <div class="grow h-px bg-yellow-400"></div>
           </div>
-          <div class="px-6 space-y-1">
-            <div class="flex">
+          <div class="px-6 space-y-2">
+            <div>
               <span class="flex-shrink-0 text-[#df6311]">已毕业地图：</span>
               <span>{{ goods.maps_text }}</span>
             </div>
-            <div class="flex">
+            <div>
               <span class="flex-shrink-0 text-[#df6311]">已毕业季节：</span>
               <span>{{ goods.seasons_text }}</span>
             </div>
-            <div class="flex">
+            <div>
               <span class="flex-shrink-0 text-[#df6311]">稀有礼包：</span>
               <span class="text-yellow-200">{{ goods.gift_bags_text }}</span>
             </div>
@@ -50,7 +50,7 @@
               <span class="text-yellow-200">{{ goods.hot_items_text }}</span>
             </div>
             <div>
-              <span class="flex-grow-0 text-[#df6311]">身高：</span>
+              <span class="flex-shrink-0 text-[#df6311]">身高：</span>
               <span class="text-yellow-200">{{ goods.height_text }}</span>
             </div>
           </div>

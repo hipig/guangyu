@@ -32,6 +32,7 @@ return new class extends Migration
             $table->boolean('is_generated_cover')->default(false)->comment('是否生成封面');
             $table->unsignedTinyInteger('status')->default(1)->comment('上架状态');
             $table->unsignedTinyInteger('sale_status')->default(1)->comment('销售状态');
+            $table->text('operate_remark')->nullable()->comment('操作备注');
             $table->string('created_by', 64)->default('')->comment('创建人');
             $table->string('updated_by', 64)->default('')->comment('更新人');
             $table->timestamps();

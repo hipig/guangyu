@@ -84,6 +84,7 @@ class Goods extends Model
         'is_generated_cover',
         'status',
         'sale_status',
+        'operate_remark',
     ];
 
     protected $casts = [

@@ -2,10 +2,8 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Selectable\GoodsGiftBags;
-use App\Admin\Selectable\GoodsHotItems;
-use App\Admin\Selectable\GoodsMaps;
-use App\Admin\Selectable\GoodsSeasons;
+use App\Admin\Actions\Goods\BatchPutOnOff;
+use App\Admin\Actions\Goods\PutOnOff;
 use App\Models\Goods;
 use App\Models\GoodsAttribute;
 use Encore\Admin\Auth\Permission;
@@ -70,7 +68,7 @@ class GoodsController extends AdminController
            return $value . '%';
         });
         $grid->column('height_text', '身高');
-        $grid->column('status', '上架状态')->editable('select', Goods::$statusMap);
+        $grid->column('status', '上架状态')->using(Goods::$statusMap);
         $grid->column('created_by', '创建人');
         $grid->column('created_at', '创建时间');
 
@@ -89,6 +87,12 @@ class GoodsController extends AdminController
             if (Admin::user()->cannot('goods.destroy')) {
                 $actions->disableDelete();
             }
+
+            $actions->add(new PutOnOff());
+        });
+
+        $grid->batchActions(function ($batch) {
+            $batch->add(new BatchPutOnOff());
         });
 
         if (Admin::user()->cannot('goods.create')) {
@@ -108,7 +112,7 @@ class GoodsController extends AdminController
         $form = new Form(new Goods());
 
         $form->tab('基础信息', function (Form $form) {
-            $form->text('no', '编号')->rules('required');
+            $form->text('no', '编号')->creationRules(['required', "unique:goods"])->updateRules(['required', "unique:goods,no,{{id}}"]);
             $form->radio('platform', '系统')->default(Goods::PLATFORM_ANDROID)->options(Goods::$platformMap)->rules('required');
             $form->select('account_type', '账号类型')->options(Goods::$accountTypeMap)->rules('required');
 
@@ -129,7 +133,7 @@ class GoodsController extends AdminController
             ]);
             $form->select('height', '身高')->options(Goods::$heightMap);
             $form->textarea('description', '其他亮点');
-            $form->radio('status', '上架状态')->default(Goods::STATUS_ENABLE)->options(Goods::$statusMap);
+
         });
 
         $form->tab('主要信息', function (Form $form) {
@@ -146,6 +150,11 @@ class GoodsController extends AdminController
 
         $form->tab('详情图片', function (Form $form) {
             $form->multipleImage('screenshot_images', '截图上传')->removable()->sortable();
+        });
+
+        $form->tab('上下架', function (Form $form) {
+            $form->radio('status', '上架状态')->default(Goods::STATUS_ENABLE)->options(Goods::$statusMap);
+            $form->textarea('operate_remark', '操作备注');
         });
 
         $form->tools(function (Form\Tools $tools) {

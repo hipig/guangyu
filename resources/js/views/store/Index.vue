@@ -29,7 +29,7 @@
             <div class="absolute top-full inset-x-0 bg-white shadow-md" v-show="stateStore.sort">
               <div class="pb-2">
                 <div class="flex flex-col text-base">
-                  <div class="px-3 py-2 cursor-pointer" :class="params.sort_type == key ? 'text-orange-500' : ''" v-for="(label, key) in sortList" :key="key" @click="handleSort(key)">{{ label }}</div>
+                  <div class="px-3 py-2 cursor-pointer" :class="filters.sort_type == key ? 'text-orange-500' : ''" v-for="(label, key) in sortList" :key="key" @click="handleSort(key)">{{ label }}</div>
                 </div>
               </div>
             </div>
@@ -50,7 +50,7 @@
                     <div class="space-y-1" v-for="(attribute, key) in baseAttributeList" :key="key">
                       <div class="text-sm text-gray-500">{{ attribute.name }}</div>
                       <div class="grid grid-cols-3 gap-3">
-                        <div class="py-1.5 text-center text-sm rounded-full cursor-pointer" :class="params[key] == value ? 'bg-orange-100 text-orange-600' : 'bg-gray-200'" v-for="(label, value) in attribute.items" :key="value" @click="handleSelectBase(key, value)">{{ label }}</div>
+                        <div class="py-1.5 text-center text-sm rounded-full cursor-pointer" :class="filters[key] == value ? 'bg-orange-100 text-orange-600' : 'bg-gray-200'" v-for="(label, value) in attribute.items" :key="value" @click="handleSelectBase(key, value)">{{ label }}</div>
                       </div>
                     </div>
                   </div>
@@ -80,11 +80,11 @@
                     <div class="space-y-1" v-for="(attribute, key) in priceAttributeList" :key="key">
                       <div class="text-sm text-gray-500">{{ attribute.name }}</div>
                       <div class="grid grid-cols-3 gap-3">
-                        <div class="py-1.5 text-center text-sm rounded-full cursor-pointer" :class="params[key] == value ? 'bg-orange-100 text-orange-600' : 'bg-gray-200'" v-for="(label, value) in attribute.items" :key="value" @click="handleSelectPrice(key, value)">{{ label }}</div>
+                        <div class="py-1.5 text-center text-sm rounded-full cursor-pointer" :class="filters[key] == value ? 'bg-orange-100 text-orange-600' : 'bg-gray-200'" v-for="(label, value) in attribute.items" :key="value" @click="handleSelectPrice(key, value)">{{ label }}</div>
                       </div>
                     </div>
                     <label class="inline-flex items-center space-x-2">
-                      <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-orange-600 shadow-sm focus:border-orange-300 focus:ring focus:ring-offset-0 focus:ring-orange-200 focus:ring-opacity-50" v-model="params.is_special">
+                      <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-orange-600 shadow-sm focus:border-orange-300 focus:ring focus:ring-offset-0 focus:ring-orange-200 focus:ring-opacity-50" v-model="filters.is_special">
                       <span>是否有折扣</span>
                     </label>
                   </div>
@@ -114,7 +114,7 @@
                     <div class="space-y-1" v-for="(attribute, key) in mainAttributeList" :key="key">
                       <div class="text-sm text-gray-500">{{ attribute.name }}</div>
                       <div class="grid grid-cols-3 gap-3">
-                        <div class="py-1.5 text-center text-sm rounded cursor-pointer" :class="params[key].indexOf(value) > -1 ? 'bg-orange-100 text-orange-600' : 'bg-gray-200'" v-for="(label, value) in attribute.items" :key="value" @click="handleSelectMain(key, value)">{{ label }}</div>
+                        <div class="py-1.5 text-center text-sm rounded cursor-pointer" :class="filters[key].indexOf(value) > -1 ? 'bg-orange-100 text-orange-600' : 'bg-gray-200'" v-for="(label, value) in attribute.items" :key="value" @click="handleSelectMain(key, value)">{{ label }}</div>
                       </div>
                     </div>
                   </div>
@@ -156,14 +156,13 @@
 <script>
 import {getGoods, getGoodsAttributes} from "@/api/store"
 import Pageination from "@/components/Pageination"
-import Clickoutside from "@/utils/clickoutside"
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: "goods",
   components: {
     Pageination
   },
-  directives: { Clickoutside },
   data () {
     return {
       params: {
@@ -218,16 +217,24 @@ export default {
       loading: false
     }
   },
+  computed: {
+    ...mapGetters({
+      'filters': 'store/filters',
+    })
+  },
   mounted() {
     this.getGoodsAttributeList()
     this.getGoodsList()
   },
   methods: {
+    ...mapActions({
+      'setFilter': 'store/setFilter'
+    }),
     getGoodsList() {
-      let params = this.params
-      params.page = this.page
+      let filters = this.filters
+      filters.page = this.page
 
-      getGoods(params)
+      getGoods(filters)
         .then(res => {
           this.goodsList = res.data
           this.total = res.meta.total
@@ -252,31 +259,33 @@ export default {
       })
     },
     handleSort(key) {
-      this.params.sort_type = key
+      console.log(key)
+      this.setFilter({key: 'sort_type', value: key})
       this.handleCloseState()
       this.getGoodsList()
     },
     handleSelectBase(key, value) {
-      this.params[key] = value
+      this.setFilter({key, value})
     },
     handleSelectPrice(key, value) {
-      this.params[key] = value
+      this.setFilter({key, value})
     },
     handleSelectMain(key, value) {
-      let index = _.indexOf(this.params[key], value)
+      let data = this.filters[key]
+      let index = _.indexOf(data, value)
       if (index > -1) {
-        this.params[key].splice(index, 1)
+        data.splice(index, 1)
       } else {
-        this.params[key].push(value)
+        data.push(value)
       }
-      console.log(this.params[key])
+      this.setFilter({key, value: data})
     },
     handleDetail(id) {
       this.$router.push({ path: '/store/detail', query: { id } })
     },
     resetBaseAttribute() {
       _.forEach(this.baseAttributeList, (_, key) => {
-        this.params[key] = ""
+        this.setFilter({key, value: ""})
       })
     },
     submitBaseAttribute() {
@@ -285,9 +294,9 @@ export default {
     },
     resetPriceAttribute() {
       _.forEach(this.priceAttributeList, (_, key) => {
-        this.params[key] = ""
+        this.setFilter({key, value: ""})
       })
-      this.params.is_special = false
+      this.setFilter({key: 'is_special', value: false})
     },
     submitPriceAttribute() {
       this.handleCloseState()
@@ -295,7 +304,7 @@ export default {
     },
     resetMainAttribute() {
       _.forEach(this.mainAttributeList, (_, key) => {
-        this.params[key] = []
+        this.setFilter({key, value: []})
       })
     },
     submitMainAttribute() {

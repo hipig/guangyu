@@ -12,7 +12,7 @@ class GoodsAttributesController extends Controller
     public function index(Request $request)
     {
         $baseAttributes = [
-            'plaform' => [
+            'platform' => [
                 'name' => '平台',
                 'items' => Goods::$platformMap
             ],

@@ -41,8 +41,8 @@ class GenerateGoodsCover implements ShouldQueue
         $image = \Image::make($mainBg)->resize(500, 500);
 
         // 顶部
-        $this->writeHeaderText($image, $this->goods->account_type_text, 40, 50);
-        $this->writeHeaderText($image, "编号 {$this->goods->no}", 255, 50);
+        $this->writeHeaderText($image, $this->goods->platform_text . $this->goods->account_type_text, 30, 50);
+        $this->writeHeaderText($image, "编号 {$this->goods->no}", 265, 50);
 
         // 基础信息
         $this->writeLineText($image, "基础信息", 90);

@@ -24,8 +24,8 @@ class Goods extends Model
         // 账号类型
     const ACCOUNT_TYPE_EMAIL = 1;
     const ACCOUNT_TYPE_PHONE = 2;
-    const ACCOUNT_TYPE_HUAWEI = 3;
-    const ACCOUNT_TYPE_IOS = 4;
+    const ACCOUNT_TYPE_IOS = 3;
+    const ACCOUNT_TYPE_HUAWEI = 4;
     const ACCOUNT_TYPE_XIAOMI = 5;
     const ACCOUNT_TYPE_VIVO = 6;
     const ACCOUNT_TYPE_OPPO = 7;
@@ -33,12 +33,12 @@ class Goods extends Model
     public static $accountTypeMap = [
         self::ACCOUNT_TYPE_EMAIL => '邮箱账号',
         self::ACCOUNT_TYPE_PHONE => '手机账号',
-        self::ACCOUNT_TYPE_HUAWEI => '华为渠道服',
-        self::ACCOUNT_TYPE_IOS => '苹果ID',
-        self::ACCOUNT_TYPE_XIAOMI => '小米渠道服',
-        self::ACCOUNT_TYPE_VIVO => 'VIVO渠道服',
-        self::ACCOUNT_TYPE_OPPO => 'OPPO渠道服',
-        self::ACCOUNT_TYPE_B => 'B服',
+        self::ACCOUNT_TYPE_IOS => '苹果ID账号',
+        self::ACCOUNT_TYPE_HUAWEI => '华为账号',
+        self::ACCOUNT_TYPE_XIAOMI => '小米帐号',
+        self::ACCOUNT_TYPE_VIVO => 'VIVO帐号',
+        self::ACCOUNT_TYPE_OPPO => 'OPPO帐号',
+        self::ACCOUNT_TYPE_B => 'B服帐号',
     ];
 
     // 身高

@@ -159,14 +159,14 @@ class AdminTablesSeeder extends Seeder
                 [
                     "name" => "商品属性添加",
                     "slug" => "goods.attributes.create",
-                    "http_method" => "GET",
-                    "http_path" => "/goods-attributes/create"
+                    "http_method" => "POST",
+                    "http_path" => "/goods-attributes"
                 ],
                 [
                     "name" => "商品属性编辑",
                     "slug" => "goods.attributes.edit",
-                    "http_method" => "GET",
-                    "http_path" => "/goods-attributes/*/edit"
+                    "http_method" => "PUT",
+                    "http_path" => "/goods-attributes/*"
                 ],
                 [
                     "name" => "商品属性删除",
@@ -183,14 +183,14 @@ class AdminTablesSeeder extends Seeder
                 [
                     "name" => "商品添加",
                     "slug" => "goods.create",
-                    "http_method" => "GET",
-                    "http_path" => "/goods/create"
+                    "http_method" => "POST",
+                    "http_path" => "/goods"
                 ],
                 [
                     "name" => "商品编辑",
                     "slug" => "goods.edit",
-                    "http_method" => "GET",
-                    "http_path" => "/goods/*/edit"
+                    "http_method" => "PUT",
+                    "http_path" => "/goods/*"
                 ],
                 [
                     "name" => "商品删除",

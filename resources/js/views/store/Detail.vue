@@ -10,7 +10,7 @@
     <div class="space-y-2">
       <div class="bg-[#3d4667] text-gray-50 text-lg py-6 space-y-4" :style="{backgroundImage: 'url(' +mainBg+ ')'}">
         <div class="flex justify-between px-10 text-2xl">
-          <h3>{{ goods.account_type_text }}</h3>
+          <h3>{{ goods.platform_text }}{{ goods.account_type_text }}</h3>
           <span>编号 {{ goods.no }}</span>
         </div>
         <div class="space-y-4">

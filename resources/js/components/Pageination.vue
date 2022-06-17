@@ -13,7 +13,7 @@
       <span class="block py-1 px-3 text-gray-500">...</span>
     </li>
     <li>
-      <button @click="next" class="py-1 px-3 rounded" :class="[localPage === pages ? 'bg-orange-400 border-orange-400 bg-opacity-50 text-white cursor-not-allowed' : 'bg-orange-600 border-orange-600 text-white cursor-pointer']" :disabled="localPage === pages">下一页</button>
+      <button @click="next" class="py-1 px-3 border rounded" :class="[localPage === pages ? 'bg-orange-400 border-orange-400 bg-opacity-50 text-white cursor-not-allowed' : 'bg-orange-600 border-orange-600 text-white cursor-pointer']" :disabled="localPage === pages">下一页</button>
     </li>
   </ul>
 </template>

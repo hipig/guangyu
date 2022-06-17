@@ -137,15 +137,12 @@ class Goods extends Model
         $imagesUrl = [];
         $images = $this->screenshot_images ?? [];
         foreach ($images as $image) {
-            $res = getimagesize($storage->path($image));
-
-            if ($res) {
-                $imagesUrl[] = [
-                    'src' => $storage->url($image),
-                    'width' => $res[0],
-                    'height' => $res[1]
-                ];
-            }
+            list($width, $height) = getimagesize($storage->path($image));
+            $imagesUrl[] = [
+                'src' => $storage->url($image),
+                'width' => $width,
+                'height' => $height
+            ];
         }
         return $imagesUrl;
     }

@@ -134,19 +134,20 @@ class Goods extends Model
     public function getScreenshotImagesUrlAttribute()
     {
         $storage = Storage::disk('upload');
+        $imagesUrl = [];
         $images = $this->screenshot_images ?? [];
-        foreach ($images as $key => $image) {
+        foreach ($images as $image) {
             $res = getimagesize($storage->path($image));
 
             if ($res) {
-                $images[$key] = [
+                $imagesUrl[] = [
                     'src' => $storage->url($image),
                     'width' => $res[0],
                     'height' => $res[1]
                 ];
             }
         }
-        return $images;
+        return $imagesUrl;
     }
 
     public function maps()

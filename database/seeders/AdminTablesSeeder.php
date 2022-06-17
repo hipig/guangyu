@@ -157,14 +157,26 @@ class AdminTablesSeeder extends Seeder
                     "http_path" => "/goods-attributes"
                 ],
                 [
-                    "name" => "商品属性添加",
+                    "name" => "商品属性新增",
                     "slug" => "goods.attributes.create",
+                    "http_method" => "GET",
+                    "http_path" => "/goods-attributes/create"
+                ],
+                [
+                    "name" => "商品属性添加",
+                    "slug" => "goods.attributes.store",
                     "http_method" => "POST",
                     "http_path" => "/goods-attributes"
                 ],
                 [
                     "name" => "商品属性编辑",
                     "slug" => "goods.attributes.edit",
+                    "http_method" => "GET",
+                    "http_path" => "/goods-attributes/*/edit"
+                ],
+                [
+                    "name" => "商品属性更新",
+                    "slug" => "goods.attributes.update",
                     "http_method" => "PUT",
                     "http_path" => "/goods-attributes/*"
                 ],
@@ -181,14 +193,26 @@ class AdminTablesSeeder extends Seeder
                     "http_path" => "/goods"
                 ],
                 [
-                    "name" => "商品添加",
+                    "name" => "商品新增",
                     "slug" => "goods.create",
+                    "http_method" => "GET",
+                    "http_path" => "/goods/create"
+                ],
+                [
+                    "name" => "商品添加",
+                    "slug" => "goods.store",
                     "http_method" => "POST",
                     "http_path" => "/goods"
                 ],
                 [
                     "name" => "商品编辑",
                     "slug" => "goods.edit",
+                    "http_method" => "GET",
+                    "http_path" => "/goods/*/edit"
+                ],
+                [
+                    "name" => "商品更新",
+                    "slug" => "goods.update",
                     "http_method" => "PUT",
                     "http_path" => "/goods/*"
                 ],

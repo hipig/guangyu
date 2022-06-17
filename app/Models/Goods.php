@@ -42,10 +42,12 @@ class Goods extends Model
     ];
 
     // 身高
+    const HEIGHT_OTHER = 0;
     const HEIGHT_SHORT = 1;
     const HEIGHT_NOTHING = 2;
     const HEIGHT_ZERO = 3;
     public static $heightMap = [
+        self::HEIGHT_OTHER => '其他',
         self::HEIGHT_SHORT => '永矮',
         self::HEIGHT_NOTHING => '永无',
         self::HEIGHT_ZERO => '0身高',
@@ -89,6 +91,7 @@ class Goods extends Model
 
     protected $casts = [
         'screenshot_images' => 'array',
+        'is_generated_cover' => 'boolean',
     ];
 
     protected $appends = [
@@ -135,11 +138,13 @@ class Goods extends Model
         foreach ($images as $key => $image) {
             $res = getimagesize($storage->path($image));
 
-            $images[$key] = [
-                'src' => $storage->url($image),
-                'width' => $res[0],
-                'height' => $res[1]
-            ];
+            if ($res) {
+                $images[$key] = [
+                    'src' => $storage->url($image),
+                    'width' => $res[0],
+                    'height' => $res[1]
+                ];
+            }
         }
         return $images;
     }

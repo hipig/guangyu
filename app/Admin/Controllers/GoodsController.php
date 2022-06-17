@@ -70,6 +70,7 @@ class GoodsController extends AdminController
            return $value . '%';
         });
         $grid->column('height_text', '身高');
+        $grid->column('is_generated_cover', '已生成封面')->bool();
         $grid->column('status', '上架状态')->using(Goods::$statusMap);
         $grid->column('created_by', '创建人');
         $grid->column('created_at', '创建时间');
@@ -127,13 +128,9 @@ class GoodsController extends AdminController
             $form->text('fixed_price', '一口价')->placeholder('0.00')->icon('fa-money')->rules('required');
             $form->radio('is_special', '是否为特价')->default(2)->options([2 => '否', 1 => '是']);
 
-            $form->slider('progress_rate', '表演季进度')->options([
-                'max'       => 100,
-                'min'       => 0,
-                'step'      => 1,
-                'postfix'   => '%'
-            ]);
-            $form->select('height', '身高')->options(Goods::$heightMap);
+            $form->number('progress_rate', '表演季进度')->default(0)->min(0)->max(100);
+
+            $form->select('height', '身高')->default(Goods::HEIGHT_OTHER)->options(Goods::$heightMap);
             $form->textarea('description', '其他亮点');
 
         });

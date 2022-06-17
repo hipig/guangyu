@@ -49,7 +49,7 @@
               <span class="flex-shrink-0 text-[#df6311]">热门物品：</span>
               <span class="text-yellow-200">{{ goods.hot_items_text }}</span>
             </div>
-            <div>
+            <div v-if="goods.height > 0">
               <span class="flex-shrink-0 text-[#df6311]">身高：</span>
               <span class="text-yellow-200">{{ goods.height_text }}</span>
             </div>

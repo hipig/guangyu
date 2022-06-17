@@ -25,8 +25,8 @@ class GoodsController extends Controller
         if ($request->get('height')) {
             $query->whereIn('height', $request->get('height'));
         }
-        if ($request->get('is_special')) {
-            $query->where('is_special', $request->boolean('is_special') ? Goods::SPECIAL_STATUS_ON : Goods::SPECIAL_STATUS_OFF);
+        if ($request->boolean('is_special')) {
+            $query->where('is_special', Goods::SPECIAL_STATUS_ON);
         }
         if ($request->get('maps')) {
             $query->whereHas('maps', function (Builder $query) use ($request) {
@@ -71,22 +71,17 @@ class GoodsController extends Controller
             }
         }
 
-        if ($request->get('sort_type')) {
-            switch ($request->get('sort_type')) {
-                case 1:
-                    $query->latest();
-                    break;
-                case 2:
-                    $query->oldest();
-                    break;
-                case 3:
-                    $query->orderBy('fixed_price');break;
-                case 4:
-                    $query->orderBy('fixed_price', 'desc');
-                    break;
-                default:
-                    $query->latest();
-            }
+        switch ($request->get('sort_type')) {
+            case 2:
+                $query->oldest();
+                break;
+            case 3:
+                $query->orderBy('fixed_price');break;
+            case 4:
+                $query->orderBy('fixed_price', 'desc');
+                break;
+            default:
+                $query->latest();
         }
 
         $goods = $query->paginate(20);

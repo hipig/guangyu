@@ -77,9 +77,11 @@ class GenerateGoodsCover implements ShouldQueue
         $hotItems = $this->goods->hotItems()->pluck('value')->toArray();
         $this->writeAttributeContentText($image, $hotItems, 115, $startY, "#fef08a");
 
-        $startY += 30;
-        $this->writeAttributeLabelText($image, "身高：", 15, $startY);
-        $this->writeAttributeContentText($image, ["{$this->goods->height_text}"], 75, $startY, "#fef08a");
+        if ($this->goods->height > 0) {
+            $startY += 30;
+            $this->writeAttributeLabelText($image, "身高：", 15, $startY);
+            $this->writeAttributeContentText($image, ["{$this->goods->height_text}"], 75, $startY, "#fef08a");
+        }
 
         // 其他亮点
         if ($this->goods->description) {

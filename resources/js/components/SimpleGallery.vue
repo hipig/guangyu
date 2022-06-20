@@ -9,7 +9,7 @@
       :data-pswp-height="image.height"
       rel="noreferrer"
     >
-      <img :src="image.src" alt="" />
+      <img class="w-full" :src="image.thumbnail_src" alt="" />
     </a>
   </div>
 </template>

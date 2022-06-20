@@ -12,6 +12,7 @@ use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
+use function Webmozart\Assert\Tests\StaticAnalysis\null;
 
 class GoodsController extends AdminController
 {
@@ -146,7 +147,7 @@ class GoodsController extends AdminController
         });
 
         $form->tab('详情图片', function (Form $form) {
-            $form->multipleImage('screenshot_images', '截图上传')->removable()->sortable();
+            $form->multipleImage('screenshot_images', '截图上传')->removable()->sortable()->thumbnail('m', 480, null);
         });
 
         $form->tab('上下架', function (Form $form) {

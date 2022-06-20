@@ -5,13 +5,14 @@ namespace App\Models;
 
 use App\Jobs\GenerateGoodsCover;
 use App\Models\Concerns\HasOperator;
+use Encore\Admin\Traits\Resizable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Goods extends Model
 {
-    use HasFactory, HasOperator;
+    use HasFactory, HasOperator, Resizable;
 
     // 系统平台
     const PLATFORM_ANDROID = 1;
@@ -137,8 +138,12 @@ class Goods extends Model
         $imagesUrl = [];
         $images = $this->screenshot_images ?? [];
         foreach ($images as $image) {
+            $ext = pathinfo($image, PATHINFO_EXTENSION);
+            $name = Str::replaceLast('.'.$ext, '', $image);
+
             list($width, $height) = getimagesize($storage->path($image));
             $imagesUrl[] = [
+                'thumbnail_src' => $storage->url($name.'-m.'.$ext),
                 'src' => $storage->url($image),
                 'width' => $width,
                 'height' => $height

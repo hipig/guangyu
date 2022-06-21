@@ -113,7 +113,7 @@ class Goods extends Model
 
     public function getCoverUrlAttribute()
     {
-        $path = "{$this->no}.jpg?t=" . now()->timestamp;
+        $path = "{$this->no}.jpg";
         return Storage::disk('cover')->url($path);
     }
 

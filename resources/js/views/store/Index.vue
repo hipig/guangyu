@@ -2,7 +2,7 @@
   <div>
     <div class="py-3 text-center bg-orange-600"><h1 class="text-xl text-white">选号商城</h1></div>
     <div class="space-y-4">
-      <div class="sticky top-0 w-full bg-white shadow-sm">
+      <div class="sticky top-0 w-full bg-white shadow-sm z-10">
         <div class="px-3 relative">
           <div class="grid grid-cols-4">
             <div class="flex justify-center cursor-pointer" v-for="(label, key) in stateList" :key="key" @click="handleToggleState(key)">
@@ -29,7 +29,7 @@
             <div class="absolute top-full inset-x-0 bg-white shadow-md" v-show="stateStore.sort">
               <div class="pb-2">
                 <div class="flex flex-col text-base">
-                  <div class="px-3 py-2 cursor-pointer" :class="filters.sort_type == key ? 'text-orange-500' : ''" v-for="(label, key) in sortList" :key="key" @click="handleSort(key)">{{ label }}</div>
+                  <div class="px-3 py-2 cursor-pointer" :class="(filters.sort_type || 0) == key ? 'text-orange-500' : ''" v-for="(label, key) in sortList" :key="key" @click="handleSort(key)">{{ label }}</div>
                 </div>
               </div>
             </div>
@@ -114,7 +114,7 @@
                     <div class="space-y-1" v-for="(attribute, key) in mainAttributeList" :key="key">
                       <div class="text-sm text-gray-500">{{ attribute.name }}</div>
                       <div class="grid grid-cols-3 gap-3">
-                        <div class="py-1.5 text-center text-sm rounded cursor-pointer" :class="filters[key].indexOf(value) > -1 ? 'bg-orange-100 text-orange-600' : 'bg-gray-200'" v-for="(label, value) in attribute.items" :key="value" @click="handleSelectMain(key, value)">{{ label }}</div>
+                        <div class="py-1.5 text-center text-sm rounded cursor-pointer" :class="filters[key] && filters[key].indexOf(value) > -1 ? 'bg-orange-100 text-orange-600' : 'bg-gray-200'" v-for="(label, value) in attribute.items" :key="value" @click="handleSelectMain(key, value)">{{ label }}</div>
                       </div>
                     </div>
                   </div>
@@ -136,7 +136,11 @@
             <div class="space-y-1">
               <h3 class="text-xl text-center">{{ item.no }}</h3>
               <div class="space-y-2">
-                <img class="w-full" :src="item.cover_url" :alt="item.no">
+                <div class="relative w-full pb-[100%]">
+                  <div class="absolute inset-0 bg-gray-200">
+                    <img class="w-full" v-lazy="item.cover_url" :alt="item.no">
+                  </div>
+                </div>
                 <p class="text-lg text-orange-500">￥{{ item.fixed_price }}</p>
               </div>
             </div>
@@ -146,7 +150,7 @@
       </div>
       <div class="pt-4 pb-10">
         <div class="flex justify-center">
-          <pageination :page="page" :page-size="pageSize" :total="total" @change="changePage"></pageination>
+          <pageination :page="currentPage" :page-size="pageSize" :total="total" @change="changePage"></pageination>
         </div>
       </div>
     </div>
@@ -156,7 +160,6 @@
 <script>
 import {getGoods, getGoodsAttributes} from "@/api/store"
 import Pageination from "@/components/Pageination"
-import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: "goods",
@@ -165,14 +168,14 @@ export default {
   },
   data () {
     return {
-      params: {
+      filters: {
         platform: "",
         account_type: "",
-        maps: [],
-        seasons: [],
-        gift_bags: [],
-        hot_items: [],
-        height: [],
+        'maps[]': [],
+        'seasons[]': [],
+        'gift_bags[]': [],
+        'hot_items[]': [],
+        'height[]': [],
         price_range: "",
         is_special:false,
         sort_type: 0
@@ -212,27 +215,25 @@ export default {
       baseAttributeList: {},
       mainAttributeList: {},
       pageSize: 20,
-      page: 1,
+      currentPage: 1,
       total: 0,
       loading: false
     }
   },
-  computed: {
-    ...mapGetters({
-      'filters': 'store/filters',
-    })
-  },
-  mounted() {
+  created() {
     this.getGoodsAttributeList()
+
+    this.filters = {...this.$route.query}
+    this.currentPage = parseInt(this.$route.query.page || 1)
     this.getGoodsList()
   },
   methods: {
-    ...mapActions({
-      'setFilter': 'store/setFilter'
-    }),
+    setFilter({key ,value}) {
+      this.filters[key] = value
+    },
     getGoodsList() {
       let filters = this.filters
-      filters.page = this.page
+      filters.page = this.currentPage
 
       getGoods(filters)
         .then(res => {
@@ -248,6 +249,13 @@ export default {
           this.mainAttributeList = res.main
         })
     },
+    refreshUrl(page = 1) {
+      let filters = this.filters
+      filters.page = page
+
+      let router = this.$router.resolve({ path: '/store', query: {...filters} })
+      window.location = router.href
+    },
     handleToggleState(state) {
       _.forEach(this.stateStore, (_, key) => {
         this.stateStore[key] = key !== state ? false : !this.stateStore[key]
@@ -262,7 +270,7 @@ export default {
       console.log(key)
       this.setFilter({key: 'sort_type', value: key})
       this.handleCloseState()
-      this.getGoodsList()
+      this.refreshUrl()
     },
     handleSelectBase(key, value) {
       this.setFilter({key, value})
@@ -271,7 +279,7 @@ export default {
       this.setFilter({key, value})
     },
     handleSelectMain(key, value) {
-      let data = this.filters[key]
+      let data = this.filters[key] || []
       let index = _.indexOf(data, value)
       if (index > -1) {
         data.splice(index, 1)
@@ -290,7 +298,7 @@ export default {
     },
     submitBaseAttribute() {
       this.handleCloseState()
-      this.getGoodsList()
+      this.refreshUrl()
     },
     resetPriceAttribute() {
       _.forEach(this.priceAttributeList, (_, key) => {
@@ -300,7 +308,7 @@ export default {
     },
     submitPriceAttribute() {
       this.handleCloseState()
-      this.getGoodsList()
+      this.refreshUrl()
     },
     resetMainAttribute() {
       _.forEach(this.mainAttributeList, (_, key) => {
@@ -309,11 +317,11 @@ export default {
     },
     submitMainAttribute() {
       this.handleCloseState()
-      this.getGoodsList()
+      this.refreshUrl()
     },
     changePage(page) {
-      this.page = page
-      this.getGoodsList()
+      this.currentPage = page
+      this.refreshUrl(this.currentPage)
     }
   }
 }

@@ -28,12 +28,12 @@ class GoodsAttributesController extends Controller
             ->get()
             ->groupBy('type')
             ->mapWithKeys(function ($items, $key) {
-                $keys = [1 => 'maps', 2 => 'seasons', 3 => 'gift_bags', 4 => 'hot_items'];
+                $keys = [1 => 'maps[]', 2 => 'seasons[]', 3 => 'gift_bags[]', 4 => 'hot_items[]'];
                 $row['name'] = GoodsAttribute::$typeMap[$key] ?? '';
                 $row['items'] = $items->sortBy('rank')->pluck('value', 'id');
                 return [$keys[$key] => $row];
             });
-        $mainAttributes['height'] = [
+        $mainAttributes['height[]'] = [
             'name' => '身高',
             'items' => Goods::$heightMap,
         ];

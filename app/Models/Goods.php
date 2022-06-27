@@ -140,10 +140,11 @@ class Goods extends Model
         foreach ($images as $image) {
             $ext = pathinfo($image, PATHINFO_EXTENSION);
             $name = Str::replaceLast('.'.$ext, '', $image);
+            $thumbnailName = $name.'-m.'.$ext;
 
             list($width, $height) = getimagesize($storage->path($image));
             $imagesUrl[] = [
-                'thumbnail_src' => $storage->url($name.'-m.'.$ext),
+                'thumbnail_src' => $storage->exists($thumbnailName) ? $storage->url($thumbnailName) : $storage->url($image),
                 'src' => $storage->url($image),
                 'width' => $width,
                 'height' => $height

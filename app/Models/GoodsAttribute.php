@@ -21,6 +21,8 @@ class GoodsAttribute extends Model
         self::TYPE_ITEM => '热门物品',
     ];
 
+    const CACHE_KEY = 'group:goods_attributes';
+
     protected $fillable = [
         'type',
         'value',

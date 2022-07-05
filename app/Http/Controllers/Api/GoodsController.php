@@ -22,31 +22,31 @@ class GoodsController extends Controller
         if ($request->get('account_type')) {
             $query->where('account_type', $request->get('account_type'));
         }
-        if ($request->get('height')) {
-            $query->whereIn('height', $request->get('height'));
+        if ($request->has('height')) {
+            $query->whereIn('height', (array)$request->get('height'));
         }
         if ($request->boolean('is_special')) {
             $query->where('is_special', Goods::SPECIAL_STATUS_ON);
         }
-        if ($request->get('maps')) {
-            $query->whereHas('maps', function (Builder $query) use ($request) {
-                $query->whereIn('attribute_id', $request->get('maps'));
-            });
+        if ($maps = (array)$request->get('maps')) {
+            $query->whereHas('maps', function (Builder $query) use ($maps) {
+                $query->whereIn('attribute_id', $maps);
+            }, "=", count($maps));
         }
-        if ($request->get('seasons')) {
-            $query->whereHas('seasons', function (Builder $query) use ($request) {
-                $query->whereIn('attribute_id', $request->get('seasons'));
-            });
+        if ($seasons = (array)$request->get('seasons')) {
+            $query->whereHas('seasons', function (Builder $query) use ($seasons) {
+                $query->whereIn('attribute_id', $seasons);
+            }, "=", count($seasons));
         }
-        if ($request->get('gift_bags')) {
-            $query->whereHas('giftBags', function (Builder $query) use ($request) {
-                $query->whereIn('attribute_id', $request->get('gift_bags'));
-            });
+        if ($giftBags = (array)$request->get('gift_bags')) {
+            $query->whereHas('giftBags', function (Builder $query) use ($giftBags) {
+                $query->whereIn('attribute_id', $giftBags);
+            }, "=", count($giftBags));
         }
-        if ($request->get('hot_items')) {
-            $query->whereHas('hotItems', function (Builder $query) use ($request) {
-                $query->whereIn('attribute_id', $request->get('hot_items'));
-            });
+        if ($hotItems = (array)$request->get('hot_items')) {
+            $query->whereHas('hotItems', function (Builder $query) use ($hotItems) {
+                $query->whereIn('attribute_id', $hotItems);
+            }, "=", count($hotItems));
         }
 
         if ($request->get('price_range')) {

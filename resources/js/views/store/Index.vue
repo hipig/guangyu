@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="py-3 text-center bg-orange-600"><h1 class="text-xl text-white">选号商城</h1></div>
+    <div class="py-3 text-center bg-orange-600"><a href="/" class="text-xl text-white">选号商城</a></div>
     <div class="space-y-4">
       <div class="sticky top-0 w-full bg-white shadow-sm z-10">
         <div class="px-3 relative">
@@ -114,7 +114,7 @@
                     <div class="space-y-1" v-for="(attribute, key) in mainAttributeList" :key="key">
                       <div class="text-sm text-gray-500">{{ attribute.name }}</div>
                       <div class="grid grid-cols-3 gap-3">
-                        <div class="py-1.5 text-center text-sm rounded cursor-pointer" :class="filters[key] && filters[key].indexOf(value) > -1 ? 'bg-orange-100 text-orange-600' : 'bg-gray-200'" v-for="(label, value) in attribute.items" :key="value" @click="handleSelectMain(key, value)">{{ label }}</div>
+                        <div class="py-1.5 text-center text-sm rounded cursor-pointer" :class="filters[key] && filters[key].indexOf(String(item.id)) > -1 ? 'bg-orange-100 text-orange-600' : 'bg-gray-200'" v-for="(item, index) in attribute.items" :key="index" @click="handleSelectMain(key, String(item.id))">{{ item.value }}</div>
                       </div>
                     </div>
                   </div>
@@ -171,11 +171,11 @@ export default {
       filters: {
         platform: "",
         account_type: "",
-        'maps[]': [],
-        'seasons[]': [],
-        'gift_bags[]': [],
-        'hot_items[]': [],
-        'height[]': [],
+        maps: [],
+        seasons: [],
+        gift_bags: [],
+        hot_items: [],
+        height: [],
         price_range: "",
         is_special:false,
         sort_type: 0
@@ -279,7 +279,8 @@ export default {
       this.setFilter({key, value})
     },
     handleSelectMain(key, value) {
-      let data = this.filters[key] || []
+      let data = _.isArray(this.filters[key] || []) ? (this.filters[key] || []) : this.filters[key].split(" ")
+
       let index = _.indexOf(data, value)
       if (index > -1) {
         data.splice(index, 1)

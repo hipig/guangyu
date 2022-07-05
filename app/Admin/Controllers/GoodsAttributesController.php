@@ -9,6 +9,7 @@ use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
+use Illuminate\Support\Facades\Cache;
 
 class GoodsAttributesController extends AdminController
 {
@@ -45,6 +46,7 @@ class GoodsAttributesController extends AdminController
     public function destroy($id)
     {
         Permission::check('goods.attributes.destroy');
+        Cache::forget(GoodsAttribute::CACHE_KEY);
         return parent::destroy($id);
     }
 
@@ -99,6 +101,10 @@ class GoodsAttributesController extends AdminController
         $form->text('value', '属性值')->rules('required');
         $form->number('rank', '排序')->default(0)->help('排序值越小越靠前');
         $form->switch('status', '状态')->default(1)->states($this->states);
+
+        $form->submitted(function () {
+           Cache::forget(GoodsAttribute::CACHE_KEY);
+        });
 
         $form->tools(function (Form\Tools $tools) {
             $tools->disableView();

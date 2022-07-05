@@ -31,12 +31,13 @@ class GoodsAttributesController extends Controller
                 ->groupBy('type')
                 ->mapWithKeys(function ($items, $key) {
                     $keys = [1 => 'maps', 2 => 'seasons', 3 => 'gift_bags', 4 => 'hot_items'];
+                    $row['key'] = $key;
                     $row['name'] = GoodsAttribute::$typeMap[$key] ?? '';
                     $row['items'] = $items->sortBy(function ($item) {
                         return mb_substr(pinyin_abbr($item->value), 0, 1);
                     })->values()->toArray();
                     return [$keys[$key] => $row];
-                });
+                })->sortBy('key');
 
             $expiredAt = now()->addDays(7);
             Cache::put(GoodsAttribute::CACHE_KEY, $mainAttributes, $expiredAt);
@@ -49,6 +50,6 @@ class GoodsAttributesController extends Controller
             }),
         ];
 
-        return ['base' => $baseAttributes, 'main' => $mainAttributes->toArray()];
+        return response()->json(['base' => $baseAttributes, 'main' => $mainAttributes]);
     }
 }

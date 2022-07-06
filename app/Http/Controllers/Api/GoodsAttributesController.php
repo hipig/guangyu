@@ -30,12 +30,14 @@ class GoodsAttributesController extends Controller
                 ->get()
                 ->groupBy('type')
                 ->mapWithKeys(function ($items, $key) {
-                    $keys = [1 => 'maps', 2 => 'seasons', 3 => 'gift_bags', 4 => 'hot_items'];
+                    $keys = [GoodsAttribute::TYPE_MAP => 'maps', GoodsAttribute::TYPE_SEASON => 'seasons', GoodsAttribute::TYPE_GIFT_BAG => 'gift_bags', GoodsAttribute::TYPE_ITEM => 'hot_items'];
+                    $sortBy = in_array($key, [GoodsAttribute::TYPE_MAP, GoodsAttribute::TYPE_SEASON]) ? [['rank', 'asc'], ['created_at', 'desc']] : [['abbr', 'asc'], ['rank', 'asc'], ['created_at', 'desc']];
+
                     $row['key'] = $key;
                     $row['name'] = GoodsAttribute::$typeMap[$key] ?? '';
-                    $row['items'] = $items->sortBy(function ($item) {
-                        return mb_substr(pinyin_abbr($item->value), 0, 1);
-                    })->values()->toArray();
+                    $row['items'] = $items->map(function ($item) {
+                        $item['abbr'] = mb_substr(pinyin_abbr($item->value), 0, 1);
+                    })->sortBy($sortBy)->values()->toArray();
                     return [$keys[$key] => $row];
                 })->sortBy('key');
 

@@ -12,6 +12,7 @@ use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
+use Illuminate\Support\Facades\Cache;
 use function Webmozart\Assert\Tests\StaticAnalysis\null;
 
 class GoodsController extends AdminController
@@ -135,15 +136,32 @@ class GoodsController extends AdminController
         });
 
         $form->tab('主要信息', function (Form $form) {
-            $maps = GoodsAttribute::query()->where('type', GoodsAttribute::TYPE_MAP)->pluck('value', 'id');
-            $seasons = GoodsAttribute::query()->where('type', GoodsAttribute::TYPE_SEASON)->pluck('value', 'id');
-            $giftBags = GoodsAttribute::query()->where('type', GoodsAttribute::TYPE_GIFT_BAG)->pluck('value', 'id');
-            $hotItems = GoodsAttribute::query()->where('type', GoodsAttribute::TYPE_ITEM)->pluck('value', 'id');
+            if (!$mainAttributes = Cache::get(GoodsAttribute::CACHE_KEY)) {
+                $mainAttributes = GoodsAttribute::query()
+                    ->where('status', GoodsAttribute::STATUS_ENABLE)
+                    ->latest()
+                    ->get()
+                    ->groupBy('type')
+                    ->mapWithKeys(function ($items, $key) {
+                        $keys = [GoodsAttribute::TYPE_MAP => 'maps', GoodsAttribute::TYPE_SEASON => 'seasons', GoodsAttribute::TYPE_GIFT_BAG => 'gift_bags', GoodsAttribute::TYPE_ITEM => 'hot_items'];
+                        $sortBy = in_array($key, [GoodsAttribute::TYPE_MAP, GoodsAttribute::TYPE_SEASON]) ? [['rank', 'asc'], ['created_at', 'desc']] : [['abbr', 'asc'], ['rank', 'asc'], ['created_at', 'desc']];
 
-            $form->checkbox('maps', '已毕业地图')->options($maps);
-            $form->checkbox('seasons', '已毕业季节')->options($seasons);
-            $form->checkbox('giftBags', '稀有礼包')->options($giftBags);
-            $form->checkbox('hotItems', '热门物品')->options($hotItems);
+                        $row['key'] = $key;
+                        $row['name'] = GoodsAttribute::$typeMap[$key] ?? '';
+                        $row['items'] = $items->map(function ($item) {
+                            $item['abbr'] = mb_substr(pinyin_abbr($item->value), 0, 1);
+                        })->sortBy($sortBy)->values()->toArray();
+                        return [$keys[$key] => $row];
+                    })->sortBy('key');
+
+                $expiredAt = now()->addDays(7);
+                Cache::put(GoodsAttribute::CACHE_KEY, $mainAttributes, $expiredAt);
+            }
+
+            $form->checkbox('maps', '已毕业地图')->options(collect($mainAttributes['maps']['items'])->pluck('value', 'id'));
+            $form->checkbox('seasons', '已毕业季节')->options(collect($mainAttributes['seasons']['items'])->pluck('value', 'id'));
+            $form->checkbox('giftBags', '稀有礼包')->options(collect($mainAttributes['gift_bags']['items'])->pluck('value', 'id'));
+            $form->checkbox('hotItems', '热门物品')->options(collect($mainAttributes['hot_items']['items'])->pluck('value', 'id'));
         });
 
         $form->tab('详情图片', function (Form $form) {

@@ -37,6 +37,7 @@ class GoodsAttributesController extends Controller
                     $row['name'] = GoodsAttribute::$typeMap[$key] ?? '';
                     $row['items'] = $items->map(function ($item) {
                         $item['abbr'] = mb_substr(pinyin_abbr($item->value), 0, 1);
+                        return $item;
                     })->sortBy($sortBy)->values()->toArray();
                     return [$keys[$key] => $row];
                 })->sortBy('key');

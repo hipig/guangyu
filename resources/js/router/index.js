@@ -12,7 +12,9 @@ router.afterEach(after)
 export default router
 
 function before(to, from, next) {
-  //
+  if (to.meta && to.meta.title) {
+    document.title = to.meta.title
+  }
   next()
 }
 

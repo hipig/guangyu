@@ -18,6 +18,11 @@ Route::group([
     $router->resource('goods-attributes', Controllers\GoodsAttributesController::class)->names('goods-attributes');
     $router->resource('goods', Controllers\GoodsController::class)->names('goods');
 
+    $router->resource('evaluator-attributes', Controllers\EvaluatorAttributesController::class)->names('evaluator-attributes');
+    $router->resource('evaluator-records', Controllers\EvaluatorRecordsController::class)->names('evaluator-records');
+    $router->get('evaluate', [Controllers\EvaluatorRecordsController::class, 'evaluate'])->name('evaluate');
+    $router->post('evaluate', [Controllers\EvaluatorRecordsController::class, 'submitEvaluate'])->name('evaluate.submit');
+
     $router->get('store', [Controllers\StoreController::class, 'index'])->name('store');
 
 });

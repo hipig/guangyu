@@ -6,6 +6,7 @@ function view (view) {
 
 const Goods = view('store/Index')
 const GoodsDetail = view('store/Detail')
+const Evaluator = view('evaluator/Index')
 
 export default [
   {
@@ -23,7 +24,15 @@ export default [
         path: '/store/detail',
         name: 'store.detail',
         component: GoodsDetail
-      }
+      },
+      {
+        path: '/evaluator',
+        name: 'evaluator',
+        component: Evaluator,
+        meta: {
+          title: "光遇帐号估价器"
+        }
+      },
     ]
   }
 ]

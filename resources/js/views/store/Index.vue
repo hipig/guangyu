@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bg-gray-100 min-h-screen">
     <div class="py-3 text-center bg-orange-600"><a href="/" class="text-xl text-white">选号商城</a></div>
     <div class="space-y-4">
       <div class="sticky top-0 w-full bg-white shadow-sm z-10">

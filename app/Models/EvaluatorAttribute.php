@@ -25,6 +25,8 @@ class EvaluatorAttribute extends Model
         self::TYPE_CHECKBOX
     ];
 
+    const CACHE_KEY = 'group:evaluator_attributes';
+
     protected $fillable = [
         'name',
         'type',

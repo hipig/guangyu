@@ -7,6 +7,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Support\Facades\Cache;
 
 class EvaluatorAttributesController extends AdminController
 {
@@ -75,6 +76,10 @@ class EvaluatorAttributesController extends AdminController
         $form->radio('is_compute', '参与计算')->default(1)->options([1 => '是', 0 => '否']);
         $form->number('rank', '排序')->default(0)->help('排序值越小越靠前');
         $form->switch('status', '状态')->default(1)->states($this->states);
+
+        $form->submitted(function () {
+            Cache::forget(EvaluatorAttribute::CACHE_KEY);
+        });
 
         return $form;
     }

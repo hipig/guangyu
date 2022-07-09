@@ -79,7 +79,7 @@ class EvaluatorRecordsController extends AdminController
                         case EvaluatorAttribute::TYPE_RADIO:
                             $options = array_column($attribute['options'], null, 'key');
                             if (isset($options[$value])) {
-                                $amount = $attribute[$value]['value'] ?? 0;
+                                $amount = $attribute[$value]['value'] ?: 0;
                                 $totalAmount += $amount;
                                 $result[] = "{$attribute['label']}：{$amount}";
                             }
@@ -90,7 +90,7 @@ class EvaluatorRecordsController extends AdminController
                             $amountItem = 0;
                             foreach ($value as $k => $v) {
                                 if (isset($options[$v])) {
-                                    $amount = $options[$v]['value'] ?? 0;
+                                    $amount = $options[$v]['value'] ?: 0;
                                     $amountItem += $amount;
                                     $amountText .= $k === 0 ? $amount : '+' . $amount;
                                 }
@@ -106,7 +106,7 @@ class EvaluatorRecordsController extends AdminController
                             $result[] = "{$attribute['label']}：$amountText=$amountItem";
                             break;
                         default:
-                            $amount = $attribute['value'] ?? 0;
+                            $amount = $attribute['value'] ?: 0;
                             $totalAmount += $amount;
                             $result[] = "{$attribute['label']}：$amount";
                     }

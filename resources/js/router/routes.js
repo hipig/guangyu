@@ -30,7 +30,7 @@ export default [
         name: 'evaluator',
         component: Evaluator,
         meta: {
-          title: "光遇帐号估价器"
+          title: "糖花光遇淘宝店铺官方指定估价器"
         }
       },
     ]

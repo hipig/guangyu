@@ -3,9 +3,12 @@
 namespace App\Admin\Controllers;
 
 use App\Models\EvaluatorAttribute;
+use Encore\Admin\Auth\Permission;
 use Encore\Admin\Controllers\AdminController;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 use Illuminate\Support\Facades\Cache;
 
@@ -22,6 +25,31 @@ class EvaluatorAttributesController extends AdminController
         'on'  => ['value' => 1, 'text' => '启用', 'color' => 'success'],
         'off' => ['value' => 2, 'text' => '禁用', 'color' => 'danger'],
     ];
+
+    public function index(Content $content)
+    {
+        Permission::check('evaluator.attributes');
+        return parent::index($content);
+    }
+
+    public function create(Content $content)
+    {
+        Permission::check('evaluator.attributes.create');
+        return parent::create($content);
+    }
+
+    public function edit($id, Content $content)
+    {
+        Permission::check('evaluator.attributes.edit');
+        return parent::edit($id, $content);
+    }
+
+    public function destroy($id)
+    {
+        Permission::check('evaluator.attributes.destroy');
+        Cache::forget(EvaluatorAttribute::CACHE_KEY);
+        return parent::destroy($id);
+    }
 
     /**
      * Make a grid builder.
@@ -46,6 +74,20 @@ class EvaluatorAttributesController extends AdminController
             $filter->equal('type', '类型')->select(EvaluatorAttribute::$typeMap);
             $filter->equal('status', '状态')->radio(['' => '默认', 1 => '启用', 2 => '禁用']);
         });
+
+        $grid->actions(function ($actions) {
+            $actions->disableView();
+            if (Admin::user()->cannot('evaluator.attributes.edit')) {
+                $actions->disableEdit();
+            }
+            if (Admin::user()->cannot('evaluator.attributes.destroy')) {
+                $actions->disableDelete();
+            }
+        });
+
+        if (Admin::user()->cannot('evaluator.attributes.create')) {
+            $grid->disableCreateButton();
+        }
 
         return $grid;
     }
@@ -79,6 +121,16 @@ class EvaluatorAttributesController extends AdminController
 
         $form->submitted(function () {
             Cache::forget(EvaluatorAttribute::CACHE_KEY);
+        });
+
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableView();
+            if (Admin::user()->cannot('evaluator.attributes')) {
+                $tools->disableList();
+            }
+            if (Admin::user()->cannot('evaluator.attributes.destroy')) {
+                $tools->disableDelete();
+            }
         });
 
         return $form;

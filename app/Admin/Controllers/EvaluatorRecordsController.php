@@ -59,6 +59,7 @@ class EvaluatorRecordsController extends AdminController
 
     public function evaluate(Content $content)
     {
+        Permission::check('evaluator.records.evaluate');
         return $content
             ->title('开始估价')
             ->body(view('admin.evaluator.form'));
@@ -67,7 +68,6 @@ class EvaluatorRecordsController extends AdminController
     public function submitEvaluate(EvaluateRequest $request)
     {
         Permission::check('evaluator.records.evaluate');
-
         $content = explode("\n", str_replace("\r\n", "\n", $request->input('content')));
         if (Str::startsWith($content[0], '编号')) {
             $code = explode('：', $content[0])[1] ?? "";

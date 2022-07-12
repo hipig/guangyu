@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use App\Http\Requests\Admin\EvaluateRequest;
 use App\Models\EvaluatorAttribute;
 use App\Models\EvaluatorRecord;
+use Encore\Admin\Auth\Permission;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -65,6 +66,8 @@ class EvaluatorRecordsController extends AdminController
 
     public function submitEvaluate(EvaluateRequest $request)
     {
+        Permission::check('evaluator.records.evaluate');
+
         $content = explode("\n", str_replace("\r\n", "\n", $request->input('content')));
         if (Str::startsWith($content[0], '编号')) {
             $code = explode('：', $content[0])[1] ?? "";

@@ -40,6 +40,7 @@ class OperationLogsController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new OperationLog());
+        $grid->model()->latest();
 
         $grid->column('relation_type', '关联类型')->using(OperationLog::$relationTypeMaps);
         $grid->column('relation_url', '关联名称')->display(function () {

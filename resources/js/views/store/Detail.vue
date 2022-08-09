@@ -23,7 +23,7 @@
             <span>蜡烛数量：{{ goods.candle_count }}</span>
             <span>翼数量：{{ goods.wing_count }}</span>
             <span>爱心数量：{{ goods.love_count }}</span>
-            <span>表演季进度：{{ goods.progress_rate }}%</span>
+            <span v-if="goods.progress_name">{{ goods.progress_name }}进度：{{ goods.progress_value }}%</span>
           </div>
         </div>
         <div class="space-y-4">

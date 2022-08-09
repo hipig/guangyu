@@ -23,6 +23,8 @@ Route::group([
     $router->get('evaluate', [Controllers\EvaluatorRecordsController::class, 'evaluate'])->name('evaluate');
     $router->post('evaluate', [Controllers\EvaluatorRecordsController::class, 'submitEvaluate'])->name('evaluate.submit');
 
+    $router->resource('operation-logs', Controllers\OperationLogsController::class)->names('operation-logs');
+
     $router->get('store', [Controllers\StoreController::class, 'index'])->name('store');
 
 });

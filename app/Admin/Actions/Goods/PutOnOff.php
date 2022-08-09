@@ -3,6 +3,7 @@
 namespace App\Admin\Actions\Goods;
 
 use App\Models\Goods;
+use App\Models\OperationLog;
 use Encore\Admin\Actions\RowAction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -15,6 +16,9 @@ class PutOnOff extends RowAction
     {
         $model->fill($request->only('status', 'operate_remark'));
         $model->save();
+
+        $type = $request->status == Goods::STATUS_ENABLE ? OperationLog::OPERATION_TYPE_GOODS_PUTON : OperationLog::OPERATION_TYPE_GOODS_PUTOFF;
+        OperationLog::record($model, $type);
 
         return $this->response()->success('操作成功！')->refresh();
     }

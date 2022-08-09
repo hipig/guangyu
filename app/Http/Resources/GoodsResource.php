@@ -14,7 +14,18 @@ class GoodsResource extends JsonResource
      */
     public function toArray($request)
     {
+        $progressName = '';
+        $progressRate = 0;
+        if (!empty($this->progress_rate)) {
+            $progress = $this->progress_rate;
+            $progress = end($progress) ?: [];
+            $progressName = $progress['name'] ?? '';
+            $progressRate = $progress['rate'] ?? 0;
+        }
+
         $res = [
+            'progress_name' => $progressName,
+            'progress_value' => $progressRate,
             'maps_text' => optional($this->maps)->pluck('value')->implode('，'),
             'seasons_text' => optional($this->seasons)->pluck('value')->implode('，'),
             'gift_bags_text' => optional($this->giftBags)->pluck('value')->implode('，'),

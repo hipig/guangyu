@@ -49,7 +49,11 @@ class GenerateGoodsCover implements ShouldQueue
         $this->writeCountText($image, "蜡烛数量：{$this->goods->candle_count}", 15, 140);
         $this->writeCountText($image, "翼数量：{$this->goods->wing_count}", 270, 140);
         $this->writeCountText($image, "爱心数量：{$this->goods->love_count}", 15, 175);
-        $this->writeCountText($image, "表演季进度：{$this->goods->progress_rate}%", 270, 175);
+        $progress = $this->goods->progress_rate;
+        if (!empty($progress)) {
+            $progress = end($progress);
+            $this->writeCountText($image, "{$progress['name']}进度：{$progress['rate']}%", 270, 175);
+        }
 
         // 主要信息
         $this->writeLineText($image, "主要信息", 200);

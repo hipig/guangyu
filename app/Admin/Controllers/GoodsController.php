@@ -6,6 +6,7 @@ use App\Admin\Actions\Goods\BatchPutOnOff;
 use App\Admin\Actions\Goods\PutOnOff;
 use App\Models\Goods;
 use App\Models\GoodsAttribute;
+use App\Models\OperationLog;
 use Encore\Admin\Auth\Permission;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Facades\Admin;
@@ -13,7 +14,6 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Illuminate\Support\Facades\Cache;
-use function Webmozart\Assert\Tests\StaticAnalysis\null;
 
 class GoodsController extends AdminController
 {
@@ -68,8 +68,13 @@ class GoodsController extends AdminController
         $grid->column('cost_price', '成本价');
         $grid->column('min_price', '最低价');
         $grid->column('fixed_price', '一口价');
-        $grid->column('progress_rate', '表演季进度')->display(function ($value) {
-           return $value . '%';
+        $grid->column('progress_rate', '季度进度')->display(function ($value) {
+            $season = end($value) ?: [];
+            $return = '';
+            if (!empty($season)) {
+                $return = ($season['name'] ?? '') . ': ' . ($season['rate'] ?? 0) . '%';
+            }
+            return $return;
         });
         $grid->column('height_text', '身高');
         $grid->column('is_generated_cover', '已生成封面')->bool();
@@ -129,10 +134,16 @@ class GoodsController extends AdminController
             $form->text('min_price', '最低价')->placeholder('0.00')->icon('fa-money')->rules('required');
             $form->text('fixed_price', '一口价')->placeholder('0.00')->icon('fa-money')->rules('required');
             $form->radio('is_special', '是否为特价')->default(2)->options([2 => '否', 1 => '是']);
-            $form->text('progress_rate', '表演季进度')->default(0)->append('%')->rules('integer|min:0|max:100');
             $form->select('height', '身高')->default(Goods::HEIGHT_OTHER)->options(Goods::$heightMap);
             $form->textarea('description', '其他亮点');
 
+        });
+
+        $form->tab('季度进度', function (Form $form) {
+            $form->table('progress_rate', '季进度', function ($table) {
+                $table->text('name', '季度名称');
+                $table->text('rate', '进度')->default(0)->append('%')->rules('integer|min:0|max:100');
+            });
         });
 
         $form->tab('主要信息', function (Form $form) {
@@ -172,6 +183,11 @@ class GoodsController extends AdminController
         $form->tab('上下架', function (Form $form) {
             $form->radio('status', '上架状态')->default(Goods::STATUS_ENABLE)->options(Goods::$statusMap);
             $form->textarea('operate_remark', '操作备注');
+        });
+
+        $form->saved(function (Form $form) {
+            $type = $form->isEditing() ? OperationLog::OPERATION_TYPE_GOODS_UPDATE : OperationLog::OPERATION_TYPE_GOODS_CREATE;
+            OperationLog::record($form->model(), $type);
         });
 
         $form->tools(function (Form\Tools $tools) {

@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Goods;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class FixedGoodsProgress extends Command
 {
@@ -24,17 +25,17 @@ class FixedGoodsProgress extends Command
     /**
      * Execute the console command.
      *
-     * @return int
      */
     public function handle()
     {
         $page = 1;
         while (true) {
             $pageSize = 20;
-            $goods = Goods::query()->paginate($pageSize, '*', 'page', $page);
+            $goods = DB::table('goods')->paginate($pageSize, '*', 'page', $page);
             foreach ($goods as $item) {
-                $item->progress_rate = [["name" => "表演季", "rate" => $item->progress_rate]];
-                $item->save();
+                DB::table('goods')->where('id', $item->id)->update([
+                    'progress_rate' => json_encode([["name" => "表演季", "rate" => $item->progress_rate]])
+                ]);
             }
 
             if (count($goods) < $pageSize) {

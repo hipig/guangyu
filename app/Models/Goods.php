@@ -132,15 +132,15 @@ class Goods extends Model
         return self::$heightMap[$this->height] ?? '';
     }
 
-//    public function getProgressRateAttribute($value)
-//    {
-//        return array_values(json_decode($value, true) ?: []);
-//    }
-//
-//    public function setProgressRateAttribute($value)
-//    {
-//        $this->attributes['progress_rate'] = json_encode(array_values($value ?? []));
-//    }
+    public function getProgressRateAttribute($value)
+    {
+        return array_values(json_decode($value, true) ?: []);
+    }
+
+    public function setProgressRateAttribute($value)
+    {
+        $this->attributes['progress_rate'] = json_encode(array_values($value ?? []));
+    }
 
     public function getScreenshotImagesUrlAttribute()
     {

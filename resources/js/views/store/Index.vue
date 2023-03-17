@@ -1,6 +1,6 @@
 <template>
   <div class="bg-gray-100 min-h-screen">
-    <div class="py-3 text-center bg-orange-600"><a href="/" class="text-xl text-white">选号商城</a></div>
+    <div class="py-3 text-center bg-orange-600"><a href="/" class="text-xl text-white">{{ appName }}</a></div>
     <div class="space-y-4">
       <div class="sticky top-0 w-full bg-white shadow-sm z-10">
         <div class="px-3 relative">
@@ -168,6 +168,7 @@ export default {
   },
   data () {
     return {
+      appName: process.env.MIX_APP_NAME,
       filters: {
         platform: "",
         account_type: "",

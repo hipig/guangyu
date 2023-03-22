@@ -1,6 +1,6 @@
 <template>
   <div class="bg-gray-50 min-h-screen relative">
-    <div class="py-3 text-center bg-orange-600"><a href="https://item.taobao.com/item.htm?spm=a230r.1.14.22.3ad64608WHoABB&id=676077614556&ns=1&abbucket=14#detail" class="text-xl text-white" target="_blank">糖花光遇淘宝店铺官方指定估价器</a></div>
+    <div class="py-3 text-center bg-orange-600"><a href="https://item.taobao.com/item.htm?spm=a230r.1.14.22.3ad64608WHoABB&id=676077614556&ns=1&abbucket=14#detail" class="text-xl text-white" target="_blank">三级头店铺官方指定估价器</a></div>
     <div class="space-y-5 pt-8 pb-20 px-6">
       <div class="space-y-1" v-for="attribute in attributeList" :key="attribute.id">
         <div class="text-sm font-semibold">{{ attribute.label }}</div>
